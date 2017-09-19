@@ -48,5 +48,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\compression_methods\compression_methods\compression_methods.csproj">
+      <Project>{27b0d3c5-b861-4fe0-8bc5-25bd50e795d2}</Project>
+      <Name>compression_methods</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -13,75 +13,73 @@ namespace Lab1_compresion
     {
 
         static string path;
+        static string linea;
         static bool operacion = false;
-        static char[] cstring;
-        static int cCaracteres = 0;
+        static char[] chars;
+        static int charslenght = 0;
+        static string resultado;
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Indide el parámetro segun la operación que desee realizar:");
 
             VerificarComando(Console.ReadLine());
 
             Console.ReadKey();
         }
 
-        static void VerificarComando(string cmd)
+        static void VerificarComando(string lineacompleta)
         {
-            if (cmd == "-f")
+            linea = lineacompleta;
+
+            string cmd = linea.Substring(0, 2);
+            string[] lineacmd = linea.Split('"');
+
+            path = lineacmd[1];
+
+
+            if (cmd == "-c")
             {
-                Console.WriteLine("Inrese la ruta del archivo:");
-                path = Console.ReadLine();
-                operacion = true;
 
-                Console.WriteLine("Ahora indique la operación que desea realizar:");
+                BinaryReader brc = new BinaryReader(File.OpenRead(path));
+                StreamReader src = new StreamReader(File.OpenRead(path));
 
-                VerificarComando(Console.ReadLine());
+                string archivo = src.ReadToEnd();
+
+                charslenght = archivo.Length;
+                chars = brc.ReadChars(charslenght);
+
+                compression_methods.RLE_compression compresion = new compression_methods.RLE_compression();
+
+                resultado = compresion.Encode(charslenght, chars);
+
+                StreamWriter swc = new StreamWriter(path + ".rlex");
+                swc.WriteLine(resultado);
+                swc.Close();
+
+                Console.Write(resultado);
+
             }
-            else if(cmd == "-c")
+            else if (cmd == "-d")
             {
-                if(operacion)
-                {
-                    BinaryReader brc = new BinaryReader(File.OpenRead(path));
-                    StreamReader src = new StreamReader(File.OpenRead(path));
 
-                    string archivo = src.ReadToEnd();
+                StreamReader srd = new StreamReader(File.OpenRead(path));
+
+                string archivo = srd.ReadToEnd();
 
 
-                    cstring = brc.ReadChars(archivo.Length);
+                compression_methods.RLE_compression descompresion = new compression_methods.RLE_compression();
 
-                    Console.WriteLine(cstring);
+                Console.WriteLine(descompresion.Decode(archivo));
 
-
-
-                }
-                else
-                {
-                    Console.WriteLine("No se ha especificado la ruda del archivo, ingrese otro comando");
-                    VerificarComando(Console.ReadLine());
-                }
-            }
-            else if(cmd == "-d")
-            {
-                if(operacion)
-                {
-
-                }
-                else
-                {
-                    Console.WriteLine("No se ha especificado la ruda del archivo, ingrese otro comando");
-                    VerificarComando(Console.ReadLine());
-                }
-            }else if (cmd == "-e")
-            {
-                Environment.Exit(0);
             }
             else
             {
                 Console.WriteLine("Ingrese un comando válido");
                 VerificarComando(Console.ReadLine());
             }
-        }
 
+
+            }
+
+        }
     }
-}

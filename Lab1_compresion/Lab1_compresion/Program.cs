@@ -101,9 +101,22 @@ namespace Lab1_compresion
 
                     string archivo = src.ReadToEnd();
 
-                    lineacomp = src.ReadToEnd();
+                    resultado = compression_methods.ComprimirHuffman.Comprimir(archivo);
 
-                    resultado = compression_methods.ComprimirHuffman.Comprimir(lineacomp);
+
+                    StreamWriter swn = new StreamWriter(path + ".comp");
+                    swn.WriteLine("HOFFMAN");
+
+                    foreach (KeyValuePair<string, string> item in compression_methods.ComprimirHuffman.Diccionario)
+                    {
+                        swn.WriteLine(item.Key + "," + item.Value);
+                    }
+
+                    swn.WriteLine("termino");
+
+                    swn.WriteLine(resultado);
+
+                    
 
                     Console.WriteLine(resultado);
 

@@ -171,14 +171,9 @@ namespace compression_methods
 
         }
 
-        public static string descomprimir(Dictionary<string, string> clave, byte[] codigo, int tamaño)
+        public static string descomprimir(Dictionary<string, string> clave, string codigo)
         {
-            string mensaje = "";
-            foreach (var item in codigo)
-            {
-                mensaje += Convert.ToString(item, 2).PadLeft(8, '0');
-            }
-            return ObtenerMensaje(clave, mensaje.Substring(0, tamaño));
+            return ObtenerMensaje(clave, codigo);
         }
 
     }

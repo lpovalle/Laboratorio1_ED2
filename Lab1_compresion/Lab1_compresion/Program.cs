@@ -18,8 +18,7 @@ namespace Lab1_compresion
         static int charslenght = 0;
         static string resultado;
         static string denuevo;
-        static string lineacomp;
-        static byte[] msjencriptado;
+        static char[] mensaje;
 
         static void Main(string[] args)
         {
@@ -116,10 +115,26 @@ namespace Lab1_compresion
 
                     swn.WriteLine(resultado);
 
-                    
+                    swn.Close();
 
-                    Console.WriteLine(resultado);
+                    Console.Write("Compresión realizada con éxito:");
 
+                    FileInfo bcfile = new FileInfo(path);
+                    FileInfo acfile = new FileInfo(path + ".comp");
+
+
+                    int original = Convert.ToInt32(bcfile.Length);
+                    int nuevo = Convert.ToInt32(acfile.Length);
+
+                    double compratio = ((double)nuevo / (double)original);
+                    double compfactor = ((double)original / (double)nuevo);
+                    double savingp = (((double)original - (double)nuevo) / (double)original) * 100;
+
+                    Console.WriteLine("Tamaño original:         " + Convert.ToString(original));
+                    Console.WriteLine("Tamaño nuevo:            " + Convert.ToString(nuevo));
+                    Console.WriteLine("Ratio de compresión:     " + Convert.ToString(compratio));
+                    Console.WriteLine("Factor de compresión:    " + Convert.ToString(compfactor));
+                    Console.WriteLine("Porcentaje ahorrado:     " + Convert.ToString(savingp) + "%");
 
 
                 }
@@ -142,12 +157,29 @@ namespace Lab1_compresion
                         string descomp = descompresion.Decode(archivo);
 
                         swd.WriteLine(descomp);
-
-                        Console.WriteLine(descomp);
+                        swd.Close();
                          
                     }
                     else
                     {
+                        string linea = srd.ReadLine();
+                        Dictionary<string, string> claves = new Dictionary<string, string>();
+                        while(linea != "termino")
+                        {
+                            string[] clave = linea.Split(',');
+                            claves.Add(clave[0], clave[1]);
+
+                            linea = srd.ReadLine();
+                        }
+                        string mensaje = srd.ReadLine();
+
+                        StreamWriter swd = new StreamWriter(path);
+
+                        string descomp = compression_methods.ComprimirHuffman.descomprimir(claves, mensaje);
+
+                        swd.WriteLine(descomp);
+
+                        swd.Close();
 
                     }
                 }

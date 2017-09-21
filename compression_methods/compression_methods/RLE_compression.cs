@@ -15,8 +15,6 @@ namespace compression_methods
         string dcadena = "";
 
 
-
-
         public RLE_compression()
         {
 

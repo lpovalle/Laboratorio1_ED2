@@ -17,13 +17,27 @@ namespace Lab1_compresion
         static char[] chars;
         static int charslenght = 0;
         static string resultado;
+        static string denuevo;
+        static string lineacomp;
+        static byte[] msjencriptado;
 
         static void Main(string[] args)
         {
             Console.WriteLine("Inicia el programa: \n e.g: -c -f" + "(entre comillas)ruta del archivo");
             VerificarComando(Console.ReadLine());
+            Console.WriteLine("Si desea ejecutar otra operación escriba 'otave', de lo contrario presione cualquier letra");
 
-            Console.ReadKey();
+            denuevo = Console.ReadLine();
+
+            if(denuevo == "otave")
+            {
+                VerificarComando(Console.ReadLine());
+            }
+            else
+            {
+                Environment.Exit(0);
+            }
+            
         }
 
         static void VerificarComando(string lineacompleta)
@@ -54,14 +68,16 @@ namespace Lab1_compresion
 
                     resultado = compresion.Encode(charslenght, chars);
 
-                    StreamWriter swc = new StreamWriter(path + ".rlex");
+                    StreamWriter swc = new StreamWriter(path + ".comp");
+
+                    swc.WriteLine("RLE");
                     swc.WriteLine(resultado);
                     swc.Close();
 
                     Console.Write("Compresión realizada con éxito:");
 
                     FileInfo bcfile = new FileInfo(path);
-                    FileInfo acfile = new FileInfo(path + ".rlex");
+                    FileInfo acfile = new FileInfo(path + ".comp");
 
 
                     int original = Convert.ToInt32(bcfile.Length);
@@ -78,18 +94,49 @@ namespace Lab1_compresion
                     Console.WriteLine("Porcentaje ahorrado:     " + Convert.ToString(savingp) + "%");
 
                 }
+                else if (cmd == "-h")
+                {
+               
+                    StreamReader src = new StreamReader(File.OpenRead(path));
+
+                    string archivo = src.ReadToEnd();
+
+                    lineacomp = src.ReadToEnd();
+
+                    resultado = compression_methods.ComprimirHuffman.Comprimir(lineacomp);
+
+                    Console.WriteLine(resultado);
+
+
+
+                }
                 else if (cmd == "-d")
                 {
 
                     StreamReader srd = new StreamReader(File.OpenRead(path));
 
+                    string tipocompresion = srd.ReadLine();
+
+                    if(tipocompresion == "RLE")
+                    { 
+                    
                     string archivo = srd.ReadToEnd();
 
+                        compression_methods.RLE_compression descompresion = new compression_methods.RLE_compression();
 
-                    compression_methods.RLE_compression descompresion = new compression_methods.RLE_compression();
+                        StreamWriter swd = new StreamWriter(path);
+                  
+                        string descomp = descompresion.Decode(archivo);
 
-                    Console.WriteLine(descompresion.Decode(archivo));
+                        swd.WriteLine(descomp);
 
+                        Console.WriteLine(descomp);
+                         
+                    }
+                    else
+                    {
+
+                    }
                 }
                 else
                 {
